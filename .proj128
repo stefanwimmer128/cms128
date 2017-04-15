@@ -1,0 +1,22 @@
+function build()
+{
+    cd "$PORJECT"
+    rm -dfr "public"
+    cp -r "assets" "public"
+    babel "webpack.config.js.es6" | tee "webpack.config.js" &> /dev/null
+    NODE_ENV="${NODE_ENV:-development}" webpack
+    pug -P -o "public" "src/index.pug"
+}
+
+function deploy()
+{
+    cd "$PROJECT"
+    firebase deploy --only database
+}
+
+function serve()
+{
+    [ "$1" == "build" ] && proj128 build
+    cd "$PROJECT"
+    firebase serve
+}
